@@ -13,13 +13,13 @@ class Homescreen extends React.Component {
   }
 
   render = () => (
-    <div className="init" style={{ 'background': this.props.theme.dark }} >
+    <div className="container" style={{ 'background': this.props.theme.dark }} >
       <header>N A G I N I</header>
       <p className="choice">Choose level:</p>
-      <div className="level">
-        <div className='options' onClick={() => this.newGame('easy')}><h4>E a s y</h4></div>
-        <div className='options' onClick={() => this.newGame('medium')}><h4>M e d i u m</h4></div>
-        <div className='options' onClick={() => this.newGame('hard')}><h4>H a r d</h4></div>
+      <div className="options">
+        <div className='level' onClick={() => this.newGame('easy')}><h4>E a s y</h4></div>
+        <div className='level' onClick={() => this.newGame('medium')}><h4>M e d i u m</h4></div>
+        <div className='level' onClick={() => this.newGame('hard')}><h4>H a r d</h4></div>
       </div>
     </div>
 

@@ -1,0 +1,13 @@
+canvas {
+  border-radius: 10px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media screen and (max-width: 500px) {
+  canvas {
+    margin: auto;
+    border-radius: 15px;
+  }
+}

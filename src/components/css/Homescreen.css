@@ -1,4 +1,4 @@
-.init {
+.container {
   width: 600px;
   height: 500px;
   margin: auto;
@@ -29,7 +29,7 @@ h4 {
   color: #1b4965;
 }
 
-.level {
+.options {
   margin-top: 50px;
   margin-left: auto;
   margin-right: auto;
@@ -37,7 +37,7 @@ h4 {
   justify-content: space-between;
 }
 
-.options {
+.level {
   background: #fcfcfc;
   border: none;
   border-radius: 10px;
@@ -49,7 +49,64 @@ h4 {
   cursor: pointer;
 }
 
-.options:hover {
+.level:hover {
   transform: scale(1.1);
   transition-duration: 0.5s;
+}
+
+@media screen and (max-width: 500px) {
+  * {
+    margin: 0;
+    padding: 0;
+  }
+
+  .container {
+    width: 400px;
+    height: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    border-radius: 15px;
+  }
+
+  header {
+    margin-top: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 40px;
+  }
+
+  .choice {
+    margin-top: 35px;
+    margin-left: auto;
+    margin-right: auto;
+    font-size: 25px;
+  }
+
+  h4 {
+    margin: auto;
+    font-size: 20px;
+    color: #1b4965;
+    text-align: center;
+  }
+
+  .options {
+    margin-top: 55px;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .level {
+    width: 150px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
+    border: none;
+    border-radius: 10px;
+    background: #fcfcfc;
+    font-family: "Fredoka One", cursive;
+    cursor: pointer;
+  }
 }

@@ -1,6 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux';
 
+import './css/SnakeBoard.css'
 import image from './img/food.png'
 import '../services/roundedRectangle'
 
@@ -16,7 +17,8 @@ class SnakeBoard extends React.Component {
       for (let j = 0; j < this.state.col; j++)
         area[i][j] = 0;
 
-    area[this.state.food.i][this.state.food.j] = 9;
+    if (this.state.food)
+      area[this.state.food.i][this.state.food.j] = 9;
 
     this.state.snake.forEach(e => {
       area[e.i][e.j] = 1;
@@ -47,13 +49,8 @@ class SnakeBoard extends React.Component {
     let i = Math.floor(Math.random() * this.state.col);
     let j = Math.floor(Math.random() * this.state.row);
 
-    this.state.snake.forEach(e => {
-      if (i === e.i && j === e.j) {
-        while (i === e.i && i < this.state.col)
-          i = Math.floor(Math.random() * this.state.col);;
-        while (j === e.j && j < this.state.row)
-          j = Math.floor(Math.random() * this.state.row);
-      }
+    this.state.snake.forEach(el => {
+      if (i === el.i && j === el.j) return this.generateFood();
     });
 
     this.setState({ food: { i, j } });
@@ -88,7 +85,7 @@ class SnakeBoard extends React.Component {
     return { i, j };
   }
 
-  move = () => {
+  moveSnake = () => {
     const nextPos = this.nextPos();
     const snake = this.state.snake;
 
@@ -108,15 +105,17 @@ class SnakeBoard extends React.Component {
   renderBG = () => {
     let ctx = this.refs.canvas.getContext('2d');
     let bg = this.props.theme.light;
-    const row = ctx.canvas.width / 50;
-    const col = ctx.canvas.height / 50;
+
+    const boxSize = this.state.width > 400 ? 50 : 30;
+    const row = ctx.canvas.width / boxSize;
+    const col = ctx.canvas.height / boxSize;
 
     this.setState({ row, col });
 
     for (let i = 0; i < col; i++) {
       for (let j = 0; j < row; j++) {
         ctx.fillStyle = bg;
-        ctx.fillRect(j * 50, i * 50, 50, 50);
+        ctx.fillRect(j * boxSize, i * boxSize, boxSize, boxSize);
 
         bg = (bg === this.props.theme.light) ? this.props.theme.dark : this.props.theme.light;
       }
@@ -128,15 +127,17 @@ class SnakeBoard extends React.Component {
     ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
     this.renderBG();
+    const boxSize = this.state.width > 400 ? 50 : 30;
+    const rectRadius = boxSize === 50 ? 15 : 11;
 
     for (let i = 0; i < this.state.col; i++) {
       for (let j = 0; j < this.state.row; j++) {
         if (this.state.area[i][j] === 1) {
-          ctx.roundRect(j * 50, i * 50, 50, 50, 15);
+          ctx.roundRect(j * boxSize, i * boxSize, boxSize, boxSize, rectRadius);
           ctx.fillStyle = this.props.theme.snake;
           ctx.fill();
         } else if (this.state.area[i][j] === 9) {
-          ctx.drawImage(this.state.foodImg, j * 50, i * 50, 50, 50);
+          ctx.drawImage(this.state.foodImg, j * boxSize, i * boxSize, boxSize, boxSize);
         }
       }
     }
@@ -144,7 +145,7 @@ class SnakeBoard extends React.Component {
 
   snakeController = () => {
     setTimeout(() => {
-      const shouldContinue = this.move();
+      const shouldContinue = this.moveSnake();
       if (shouldContinue) {
         this.initArea();
         this.renderSnake();
@@ -155,8 +156,8 @@ class SnakeBoard extends React.Component {
   }
 
   updateCanvasDimensions = () => {
-    const width = window.innerWidth > 500 ? 850 : 450;
-    const height = window.innerWidth > 500 ? 700 : 450;
+    const width = window.innerWidth > 500 ? 850 : 390;
+    const height = window.innerWidth > 500 ? 700 : 390;
 
     this.setState({ width, height });
   }
@@ -171,7 +172,6 @@ class SnakeBoard extends React.Component {
     else refreshTime = 150;
 
     this.setState({
-      food: { i: 0, j: 0 },
       foodImg: food,
       keyPressed: 'ArrowRight',
       snake: [
@@ -208,8 +208,7 @@ class SnakeBoard extends React.Component {
       <canvas
         ref='canvas'
         style={{
-          'border': `3px solid ${this.props.theme.dark}`,
-          'borderRadius': '10px',
+          'border': `3px solid ${this.props.theme.dark}`
         }} />
     </>
   );
