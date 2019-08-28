@@ -94,7 +94,10 @@ class SnakeBoard extends React.Component {
     else
       return false;
 
-    if (this.state.area[nextPos.i][nextPos.j] === 9) this.generateFood();
+    if (this.state.area[nextPos.i][nextPos.j] === 9) {
+      this.generateFood();
+
+    }
     else snake.shift();
 
     this.setState({ snake, snakeDirection: this.state.keyPressed });
@@ -179,6 +182,8 @@ class SnakeBoard extends React.Component {
         { i: 6, j: 3 },
         { i: 6, j: 4 },
       ],
+      score: 0,
+      highScore: 0,
       refreshTime
     });
   }
@@ -204,13 +209,17 @@ class SnakeBoard extends React.Component {
   }
 
   render = () => (
-    <>
+    <div className='snakeboard-container'>
+      <div className='scores'>
+        <p>Your Score: {this.state.score}</p>
+        <p>High Score: {this.state.highScore}</p>
+      </div>
       <canvas
         ref='canvas'
         style={{
           'border': `3px solid ${this.props.theme.dark}`
         }} />
-    </>
+    </div>
   );
 }
 

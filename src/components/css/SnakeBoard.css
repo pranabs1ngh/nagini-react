@@ -1,8 +1,16 @@
 canvas {
   border-radius: 10px;
+}
+
+.snakeboard-container {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+}
+
+.scores {
+  display: flex;
+  justify-content: space-between;
 }
 
 @media screen and (max-width: 500px) {
