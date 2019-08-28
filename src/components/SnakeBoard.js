@@ -151,7 +151,7 @@ class SnakeBoard extends React.Component {
 
         this.snakeController();
       }
-    }, 200);
+    }, this.state.refreshTime);
   }
 
   updateCanvasDimensions = () => {
@@ -164,15 +164,22 @@ class SnakeBoard extends React.Component {
   UNSAFE_componentWillMount = () => {
     let food = new Image();
     food.src = image;
+
+    let refreshTime;
+    if (this.props.game.level === 'easy') refreshTime = 300;
+    else if (this.props.game.level === 'medium') refreshTime = 225;
+    else refreshTime = 150;
+
     this.setState({
+      food: { i: 0, j: 0 },
       foodImg: food,
+      keyPressed: 'ArrowRight',
       snake: [
         { i: 6, j: 2 },
         { i: 6, j: 3 },
         { i: 6, j: 4 },
       ],
-      keyPressed: 'ArrowRight',
-      food: { i: 0, j: 0 }
+      refreshTime
     });
   }
 
