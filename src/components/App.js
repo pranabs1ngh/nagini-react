@@ -1,12 +1,25 @@
 import React from 'react'
+import { connect } from 'react-redux'
+
+import './css/App.css'
+import Homescreen from './Homescreen'
+import GameScreen from './GameScreen'
 
 class App extends React.Component {
+  state = {};
+
+  componentWillMount = () => {
+    if (!this.state.game) this.setState({ component: <Homescreen /> });
+    else if (this.state.game) this.setState({ component: <GameScreen /> });
+  }
 
   render = () => (
-    <div>
-      <h1>Nagini: The classic snake game</h1>
-    </div>
+    <>
+      {this.state.component}
+    </>
   )
 }
 
-export default App;
+const mapStateToProps = state => ({ game: state.game })
+
+export default connect(mapStateToProps)(App);

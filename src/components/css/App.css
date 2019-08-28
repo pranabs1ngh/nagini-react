@@ -1,0 +1,14 @@
+html,
+body {
+  min-height: 100%;
+  font-family: "Fredoka One", cursive;
+  color: #1b4965;
+}
+
+#root {
+  margin-top: 100px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 850px;
+  height: 700px;
+}

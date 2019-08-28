@@ -1,0 +1,1 @@
+export const newGame = data => ({ type: 'NEW_GAME', payload: data });
