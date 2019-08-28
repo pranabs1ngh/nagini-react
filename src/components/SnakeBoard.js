@@ -26,19 +26,21 @@ class SnakeBoard extends React.Component {
   }
 
   changeDirection = direction => {
-    if (direction === 'w') direction = 'ArrowUp';
-    if (direction === 's') direction = 'ArrowDown';
-    if (direction === 'a') direction = 'ArrowLeft';
-    if (direction === 'd') direction = 'ArrowRight';
+    if (this.state.snakeDirection === this.state.keyPressed) {
+      if (direction === 'w') direction = 'ArrowUp';
+      if (direction === 's') direction = 'ArrowDown';
+      if (direction === 'a') direction = 'ArrowLeft';
+      if (direction === 'd') direction = 'ArrowRight';
 
-    if (direction === 'ArrowUp' && this.state.snakeDirection !== 'ArrowDown')
-      this.setState({ snakeDirection: direction });
-    else if (direction === 'ArrowDown' && this.state.snakeDirection !== 'ArrowUp')
-      this.setState({ snakeDirection: direction });
-    else if (direction === 'ArrowRight' && this.state.snakeDirection !== 'ArrowLeft')
-      this.setState({ snakeDirection: direction });
-    else if (direction === 'ArrowLeft' && this.state.snakeDirection !== 'ArrowRight')
-      this.setState({ snakeDirection: direction });
+      if (direction === 'ArrowUp' && this.state.keyPressed !== 'ArrowDown')
+        this.setState({ keyPressed: direction });
+      else if (direction === 'ArrowDown' && this.state.keyPressed !== 'ArrowUp')
+        this.setState({ keyPressed: direction });
+      else if (direction === 'ArrowRight' && this.state.keyPressed !== 'ArrowLeft')
+        this.setState({ keyPressed: direction });
+      else if (direction === 'ArrowLeft' && this.state.keyPressed !== 'ArrowRight')
+        this.setState({ keyPressed: direction });
+    }
   }
 
   generateFood = () => {
@@ -61,7 +63,7 @@ class SnakeBoard extends React.Component {
     const pos = this.state.snake[this.state.snake.length - 1];
     let i, j;
 
-    switch (this.state.snakeDirection) {
+    switch (this.state.keyPressed) {
       case 'ArrowUp':
         i = pos.i - 1;
         j = pos.j;
@@ -98,7 +100,7 @@ class SnakeBoard extends React.Component {
     if (this.state.area[nextPos.i][nextPos.j] === 9) this.generateFood();
     else snake.shift();
 
-    this.setState({ snake });
+    this.setState({ snake, snakeDirection: this.state.keyPressed });
 
     return true;
   }
@@ -169,7 +171,7 @@ class SnakeBoard extends React.Component {
         { i: 6, j: 3 },
         { i: 6, j: 4 },
       ],
-      snakeDirection: 'ArrowRight',
+      keyPressed: 'ArrowRight',
       food: { i: 0, j: 0 }
     });
   }
