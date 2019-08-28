@@ -1,9 +1,15 @@
 import { combineReducers } from 'redux'
 
-const game = (state = null, { type, payload }) => {
+const game = (state = { level: null, score: 0, highScore: 0 }, { type, payload }) => {
   switch (type) {
     case 'NEW_GAME':
-      return payload;
+      return { ...state, level: payload }
+
+    case 'UPDATE_SCORE':
+      return { ...state, score: payload }
+
+    case 'UPDATE_HIGH_SCORE':
+      return { ...state, highScore: payload }
 
     default:
       return state;

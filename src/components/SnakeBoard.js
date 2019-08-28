@@ -1,5 +1,6 @@
 import React from 'react'
 import { connect } from 'react-redux';
+import { updateScore, updateHighScore } from '../actions'
 
 import './css/SnakeBoard.css'
 import image from './img/food.png'
@@ -95,8 +96,18 @@ class SnakeBoard extends React.Component {
       return false;
 
     if (this.state.area[nextPos.i][nextPos.j] === 9) {
-      this.generateFood();
+      let score = this.props.game.score;
+      let highScore = this.props.game.highScore;
 
+      score += 10;
+      this.props.updateScore(score);
+      this.setState({ refreshTime: this.state.refreshTime - 3 });
+
+      if (score > highScore) {
+        highScore = score;
+        this.props.updateHighScore(highScore);
+      }
+      this.generateFood();
     }
     else snake.shift();
 
@@ -170,8 +181,8 @@ class SnakeBoard extends React.Component {
     food.src = image;
 
     let refreshTime;
-    if (this.props.game.level === 'easy') refreshTime = 300;
-    else if (this.props.game.level === 'medium') refreshTime = 225;
+    if (this.props.game.level === 'easy') refreshTime = 250;
+    else if (this.props.game.level === 'medium') refreshTime = 200;
     else refreshTime = 150;
 
     this.setState({
@@ -182,8 +193,6 @@ class SnakeBoard extends React.Component {
         { i: 6, j: 3 },
         { i: 6, j: 4 },
       ],
-      score: 0,
-      highScore: 0,
       refreshTime
     });
   }
@@ -211,8 +220,8 @@ class SnakeBoard extends React.Component {
   render = () => (
     <div className='snakeboard-container'>
       <div className='scores'>
-        <p>Your Score: {this.state.score}</p>
-        <p>High Score: {this.state.highScore}</p>
+        <p>Score: {this.props.game.score}</p>
+        <p>High Score: {this.props.game.highScore}</p>
       </div>
       <canvas
         ref='canvas'
@@ -225,4 +234,4 @@ class SnakeBoard extends React.Component {
 
 const mapStateToProps = state => ({ game: state.game, theme: state.theme })
 
-export default connect(mapStateToProps)(SnakeBoard);
+export default connect(mapStateToProps, { updateScore, updateHighScore })(SnakeBoard);

@@ -8,7 +8,7 @@ import SnakeBoard from './SnakeBoard'
 class Homescreen extends React.Component {
 
   newGame = async level => {
-    await this.props.newGame({ level });
+    await this.props.newGame(level);
     this.props.updatePage(<SnakeBoard />);
   }
 
