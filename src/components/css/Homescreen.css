@@ -63,10 +63,13 @@ h4 {
   .container {
     width: 400px;
     height: 400px;
-    margin: auto;
     display: flex;
     flex-direction: column;
     border-radius: 15px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
   }
 
   header {

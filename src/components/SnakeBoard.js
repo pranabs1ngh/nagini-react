@@ -1,10 +1,11 @@
 import React from 'react'
 import { connect } from 'react-redux';
-import { updateScore, updateHighScore } from '../actions'
+import { updateScore, updateHighScore, updatePage } from '../actions'
 
 import './css/SnakeBoard.css'
 import image from './img/food.png'
 import '../services/roundedRectangle'
+import ResultScreen from './ResultScreen'
 
 class SnakeBoard extends React.Component {
   state = {}
@@ -165,6 +166,10 @@ class SnakeBoard extends React.Component {
         this.renderSnake();
 
         this.snakeController();
+      } else {
+        setTimeout(() => {
+          this.props.updatePage(<ResultScreen />);
+        }, 1000);
       }
     }, this.state.refreshTime);
   }
@@ -223,15 +228,17 @@ class SnakeBoard extends React.Component {
         <p>Score: {this.props.game.score}</p>
         <p>High Score: {this.props.game.highScore}</p>
       </div>
+
       <canvas
         ref='canvas'
         style={{
           'border': `3px solid ${this.props.theme.dark}`
-        }} />
+        }}
+      />
     </div>
   );
 }
 
 const mapStateToProps = state => ({ game: state.game, theme: state.theme })
 
-export default connect(mapStateToProps, { updateScore, updateHighScore })(SnakeBoard);
+export default connect(mapStateToProps, { updateScore, updateHighScore, updatePage })(SnakeBoard);

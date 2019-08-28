@@ -6,16 +6,32 @@ canvas {
   position: absolute;
   left: 50%;
   transform: translateX(-50%);
+  margin-top: -20px;
 }
 
 .scores {
   display: flex;
   justify-content: space-between;
+  font-size: 22px;
+  margin: 0 80px;
 }
 
 @media screen and (max-width: 500px) {
   canvas {
     margin: auto;
     border-radius: 15px;
+  }
+
+  .snakeboard-container {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -55%);
+  }
+
+  .scores {
+    font-size: 20px;
+    margin: 10px 20px;
+    font-size: 15px;
   }
 }
