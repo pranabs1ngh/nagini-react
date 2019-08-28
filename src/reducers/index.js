@@ -20,4 +20,14 @@ const theme = (state = null, { type, payload }) => {
   }
 }
 
-export default combineReducers({ game, theme });
+const page = (state = null, { type, payload }) => {
+  switch (type) {
+    case 'UPDATE_PAGE':
+      return payload;
+
+    default:
+      return state;
+  }
+}
+
+export default combineReducers({ game, theme, page });

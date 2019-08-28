@@ -1,13 +1,15 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import './css/Homescreen.css'
+import { newGame, updatePage } from '../actions'
 
-import { newGame } from '../actions'
+import './css/Homescreen.css'
+import SnakeBoard from './SnakeBoard'
 
 class Homescreen extends React.Component {
 
-  newGame = level => {
-    this.props.newGame({ level });
+  newGame = async level => {
+    await this.props.newGame(level);
+    this.props.updatePage(<SnakeBoard />);
   }
 
   render = () => (
@@ -24,6 +26,6 @@ class Homescreen extends React.Component {
   )
 }
 
-const mapStateToProps = state => ({ theme: state.theme })
+const mapStateToProps = (state, ownProps) => ({ theme: state.theme, updatePage: ownProps.updateComponent })
 
-export default connect(mapStateToProps, newGame)(Homescreen);
+export default connect(mapStateToProps, { newGame, updatePage })(Homescreen);
