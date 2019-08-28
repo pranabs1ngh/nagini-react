@@ -1,29 +1,9 @@
 export default () => {
   const colors = [
     {
-      light: '#fff',
-      dark: '#54f2f2',
-      snake: '#1b4965'
-    },
-    {
-      light: '#fcfcfc',
-      dark: '#ff6b6b',
-      snake: '#292f36'
-    },
-    {
-      light: '#daf7dc',
-      dark: '#9ee493',
-      snake: '#2f4858'
-    },
-    {
-      light: '#fdfffc',
-      dark: '#d7263d',
-      snake: '02182b'
-    },
-    {
-      light: '#fdfffc',
-      dark: '#68edc6',
-      snake: '#235789'
+      light: '#fafafa',
+      dark: '#db5461',
+      snake: '#000'
     },
     {
       light: '#e8eddf',
@@ -31,9 +11,30 @@ export default () => {
       snake: '#242423'
     },
     {
-      light: '#d9d0de',
-      dark: '#a04668',
-      snake: '#0c1713'
+      light: '#f4f4f8',
+      dark: '#9ee493',
+      snake: '#000'
+    },
+    {
+      light: '#fae3c6',
+      dark: '#fe938c',
+      snake: '#000'
+    },
+    {
+      light: '#f0f3f5',
+      dark: '#d7c9aa',
+      snake: '#000'
+    },
+    {
+      light: '#e8eef2',
+      dark: '#68edc6',
+      snake: '#000'
+    },
+
+    {
+      light: '#f4f4f8',
+      dark: '#2AB7CA',
+      snake: '#0a090c'
     }
   ];
 

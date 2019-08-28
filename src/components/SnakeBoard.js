@@ -26,13 +26,18 @@ class SnakeBoard extends React.Component {
   }
 
   changeDirection = direction => {
+    if (direction === 'w') direction = 'ArrowUp';
+    if (direction === 's') direction = 'ArrowDown';
+    if (direction === 'a') direction = 'ArrowLeft';
+    if (direction === 'd') direction = 'ArrowRight';
+
     if (direction === 'ArrowUp' && this.state.snakeDirection !== 'ArrowDown')
       this.setState({ snakeDirection: direction });
-    else if (this.state.snakeDirection === 'ArrowDown' && this.state.snakeDirection !== 'ArrowUp')
+    else if (direction === 'ArrowDown' && this.state.snakeDirection !== 'ArrowUp')
       this.setState({ snakeDirection: direction });
-    else if (this.state.snakeDirection === 'ArrowRight' && this.state.snakeDirection !== 'ArrowLeft')
+    else if (direction === 'ArrowRight' && this.state.snakeDirection !== 'ArrowLeft')
       this.setState({ snakeDirection: direction });
-    else if (this.state.snakeDirection === 'ArrowLeft' && this.state.snakeDirection !== 'ArrowRight')
+    else if (direction === 'ArrowLeft' && this.state.snakeDirection !== 'ArrowRight')
       this.setState({ snakeDirection: direction });
   }
 
@@ -41,7 +46,12 @@ class SnakeBoard extends React.Component {
     let j = Math.floor(Math.random() * this.state.row);
 
     this.state.snake.forEach(e => {
-      if (i === e.i && j === e.j) return this.generateFood();
+      if (i === e.i && j === e.j) {
+        while (i === e.i && i < this.state.col)
+          i = Math.floor(Math.random() * this.state.col);;
+        while (j === e.j && j < this.state.row)
+          j = Math.floor(Math.random() * this.state.row);
+      }
     });
 
     this.setState({ food: { i, j } });
@@ -117,11 +127,11 @@ class SnakeBoard extends React.Component {
 
     this.renderBG();
 
-    for (let i = 0; i < this.state.col / 50; i++) {
-      for (let j = 0; j < this.state.row / 50; j++) {
+    for (let i = 0; i < this.state.col; i++) {
+      for (let j = 0; j < this.state.row; j++) {
         if (this.state.area[i][j] === 1) {
           ctx.roundRect(j * 50, i * 50, 50, 50, 15);
-          ctx.fillStyle = this.state.theme.snake;
+          ctx.fillStyle = this.props.theme.snake;
           ctx.fill();
         } else if (this.state.area[i][j] === 9) {
           ctx.drawImage(this.state.foodImg, j * 50, i * 50, 50, 50);
@@ -139,7 +149,7 @@ class SnakeBoard extends React.Component {
 
         this.snakeController();
       }
-    }, 100);
+    }, 200);
   }
 
   updateCanvasDimensions = () => {
