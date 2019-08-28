@@ -11,7 +11,7 @@ class Homescreen extends React.Component {
   }
 
   render = () => (
-    <div className="init">
+    <div className="init" style={{ 'background': this.props.theme.dark }} >
       <header>N A G I N I</header>
       <p className="choice">Choose level:</p>
       <div className="level">
@@ -24,4 +24,6 @@ class Homescreen extends React.Component {
   )
 }
 
-export default connect(null, newGame)(Homescreen);
+const mapStateToProps = state => ({ theme: state.theme })
+
+export default connect(mapStateToProps, newGame)(Homescreen);
