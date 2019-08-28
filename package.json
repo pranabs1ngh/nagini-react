@@ -6,7 +6,6 @@
     "@fortawesome/fontawesome-svg-core": "^1.2.22",
     "@fortawesome/free-solid-svg-icons": "^5.10.2",
     "@fortawesome/react-fontawesome": "^0.1.4",
-    "gh-pages": "^2.1.1",
     "react": "^16.9.0",
     "react-dom": "^16.9.0",
     "react-redux": "^7.1.1",
@@ -15,9 +14,8 @@
   },
   "scripts": {
     "start": "react-scripts start",
-    "test": "react-scripts test",
-    "predeploy": "react-scripts build",
-    "deploy": "gh-pages -d build"
+    "build": "react-scripts build",
+    "test": "react-scripts test"
   },
   "eslintConfig": {
     "extends": "react-app"
