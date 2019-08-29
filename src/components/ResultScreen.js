@@ -13,13 +13,13 @@ import SnakeBoard from './SnakeBoard'
 class ResultScreen extends React.Component {
 
   handleReplay = () => {
-    this.updateTheme(theme());
+    this.props.updateTheme(theme());
     this.props.updateScore(0);
     this.props.updatePage(<SnakeBoard />);
   }
 
   handleHome = () => {
-    this.updateTheme(theme());
+    this.props.updateTheme(theme());
     this.props.updateScore(0);
     this.props.updatePage(<Homescreen />);
   }
@@ -49,4 +49,4 @@ const mapStateToProps = state => ({
   theme: state.theme
 });
 
-export default connect(mapStateToProps, { updatePage, updateScore })(ResultScreen);
+export default connect(mapStateToProps, { updatePage, updateScore, updateTheme })(ResultScreen);
