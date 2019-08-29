@@ -4,7 +4,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faRedoAlt, faHome } from '@fortawesome/free-solid-svg-icons'
 
 import './css/ResultScreen.css'
-import { updatePage, updateScore } from '../actions'
+import theme from '../services/theme'
+import { updatePage, updateTheme, updateScore } from '../actions'
 
 import Homescreen from './Homescreen'
 import SnakeBoard from './SnakeBoard'
@@ -12,11 +13,13 @@ import SnakeBoard from './SnakeBoard'
 class ResultScreen extends React.Component {
 
   handleReplay = () => {
+    this.updateTheme(theme());
     this.props.updateScore(0);
     this.props.updatePage(<SnakeBoard />);
   }
 
   handleHome = () => {
+    this.updateTheme(theme());
     this.props.updateScore(0);
     this.props.updatePage(<Homescreen />);
   }
