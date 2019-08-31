@@ -51,9 +51,8 @@ class SnakeBoard extends React.Component {
     let i = Math.floor(Math.random() * this.state.col);
     let j = Math.floor(Math.random() * this.state.row);
 
-    this.state.snake.forEach(el => {
-      if (i === el.i && j === el.j) return this.generateFood();
-    });
+    for (let n = 0; n < this.state.snake.length; n++)
+      if (i === this.state.snake[n].i && j === this.state.snake[n].j) return this.generateFood();
 
     this.setState({ food: { i, j } });
   }
