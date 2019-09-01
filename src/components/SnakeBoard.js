@@ -185,9 +185,9 @@ class SnakeBoard extends React.Component {
     food.src = image;
 
     let refreshTime;
-    if (this.props.game.level === 'easy') refreshTime = 250;
-    else if (this.props.game.level === 'medium') refreshTime = 200;
-    else refreshTime = 150;
+    if (this.props.game.level === 'easy') refreshTime = 200;
+    else if (this.props.game.level === 'medium') refreshTime = 150;
+    else refreshTime = 100;
 
     this.setState({
       foodImg: food,
