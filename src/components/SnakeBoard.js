@@ -8,7 +8,24 @@ import '../services/roundedRectangle'
 import ResultScreen from './ResultScreen'
 
 class SnakeBoard extends React.Component {
-  state = {}
+  constructor(props) {
+    super(props);
+    this.state = {};
+
+    this.foodImg = new Image();
+    this.foodImg.src = image;
+
+    this.food = null;
+    this.snake = [
+      { i: 6, j: 2 },
+      { i: 6, j: 3 },
+      { i: 6, j: 4 },
+    ];
+
+    this.keyPressed = 'ArrowRight';
+    this.snakeDirection = 'ArrowRight';
+    this.refreshTime = null;
+  }
 
   initArea = () => {
     let area = new Array(this.state.row);
@@ -19,10 +36,10 @@ class SnakeBoard extends React.Component {
       for (let j = 0; j < this.state.col; j++)
         area[i][j] = 0;
 
-    if (this.state.food)
-      area[this.state.food.i][this.state.food.j] = 9;
+    if (this.food)
+      area[this.food.i][this.food.j] = 9;
 
-    this.state.snake.forEach(e => {
+    this.snake.forEach(e => {
       area[e.i][e.j] = 1;
     });
 
@@ -30,20 +47,20 @@ class SnakeBoard extends React.Component {
   }
 
   changeDirection = direction => {
-    if (this.state.snakeDirection === this.state.keyPressed) {
+    if (this.snakeDirection === this.keyPressed) {
       if (direction === 'w') direction = 'ArrowUp';
       if (direction === 's') direction = 'ArrowDown';
       if (direction === 'a') direction = 'ArrowLeft';
       if (direction === 'd') direction = 'ArrowRight';
 
-      if (direction === 'ArrowUp' && this.state.keyPressed !== 'ArrowDown')
-        this.setState({ keyPressed: direction });
-      else if (direction === 'ArrowDown' && this.state.keyPressed !== 'ArrowUp')
-        this.setState({ keyPressed: direction });
-      else if (direction === 'ArrowRight' && this.state.keyPressed !== 'ArrowLeft')
-        this.setState({ keyPressed: direction });
-      else if (direction === 'ArrowLeft' && this.state.keyPressed !== 'ArrowRight')
-        this.setState({ keyPressed: direction });
+      if (direction === 'ArrowUp' && this.keyPressed !== 'ArrowDown')
+        this.keyPressed = direction;
+      else if (direction === 'ArrowDown' && this.keyPressed !== 'ArrowUp')
+        this.keyPressed = direction;
+      else if (direction === 'ArrowRight' && this.keyPressed !== 'ArrowLeft')
+        this.keyPressed = direction;
+      else if (direction === 'ArrowLeft' && this.keyPressed !== 'ArrowRight')
+        this.keyPressed = direction;
     }
   }
 
@@ -51,17 +68,17 @@ class SnakeBoard extends React.Component {
     let i = Math.floor(Math.random() * this.state.col);
     let j = Math.floor(Math.random() * this.state.row);
 
-    for (let n = 0; n < this.state.snake.length; n++)
-      if (i === this.state.snake[n].i && j === this.state.snake[n].j) return this.generateFood();
+    for (let n = 0; n < this.snake.length; n++)
+      if (i === this.snake[n].i && j === this.snake[n].j) return this.generateFood();
 
-    this.setState({ food: { i, j } });
+    this.food = { i, j };
   }
 
   nextPos = () => {
-    const pos = this.state.snake[this.state.snake.length - 1];
+    const pos = this.snake[this.snake.length - 1];
     let i, j;
 
-    switch (this.state.keyPressed) {
+    switch (this.keyPressed) {
       case 'ArrowUp':
         i = pos.i - 1;
         j = pos.j;
@@ -88,10 +105,9 @@ class SnakeBoard extends React.Component {
 
   moveSnake = () => {
     const nextPos = this.nextPos();
-    const snake = this.state.snake;
 
     if (nextPos.i >= 0 && nextPos.i < this.state.col && nextPos.j >= 0 && nextPos.j < this.state.row && this.state.area[nextPos.i][nextPos.j] !== 1)
-      snake.push(nextPos);
+      this.snake.push(nextPos);
     else
       return false;
 
@@ -101,7 +117,7 @@ class SnakeBoard extends React.Component {
 
       score += 10;
       this.props.updateScore(score);
-      this.setState({ refreshTime: this.state.refreshTime - 3 });
+      this.refreshTime -= 3;
 
       if (score > highScore) {
         highScore = score;
@@ -109,23 +125,69 @@ class SnakeBoard extends React.Component {
       }
       this.generateFood();
     }
-    else snake.shift();
+    else this.snake.shift();
 
-    this.setState({ snake, snakeDirection: this.state.keyPressed });
+    this.snakeDirection = this.keyPressed;
 
     return true;
   }
 
-  renderBG = () => {
+  snakeController = () => {
+    setTimeout(() => {
+      const shouldContinue = this.moveSnake();
+      if (shouldContinue) {
+        this.initArea();
+        this.snakeController();
+      } else {
+        setTimeout(() => {
+          this.props.updatePage(<ResultScreen />);
+        }, 1000);
+      }
+    }, this.refreshTime);
+  }
+
+  updateCanvasDimensions = () => {
+    const width = window.innerWidth > 500 ? 850 : 390;
+    const height = window.innerWidth > 500 ? 700 : 390;
+    const boxSize = width > 400 ? 50 : 30;
+    const rectRadius = boxSize === 50 ? 15 : 11;
+    const row = width / boxSize;
+    const col = height / boxSize;
+
+    const canvas = this.refs.canvas;
+    canvas.width = width;
+    canvas.height = height;
+
+    this.setState({ width, height, row, col, boxSize, rectRadius });
+  }
+
+  componentDidMount = async () => {
+    await this.updateCanvasDimensions();
+
+    if (this.props.game.level === 'easy') this.refreshTime = 200;
+    else if (this.props.game.level === 'medium') this.refreshTime = 150;
+    else this.refreshTime = 100;
+
+    this.initArea();
+    this.generateFood();
+
+    this.snakeController();
+
+    document.addEventListener('keydown', e => {
+      this.changeDirection(e.key)
+    })
+  }
+
+  componentDidUpdate = () => {
     let ctx = this.refs.canvas.getContext('2d');
     let bg = this.props.theme.light;
 
-    const boxSize = this.state.width > 400 ? 50 : 30;
-    const row = ctx.canvas.width / boxSize;
-    const col = ctx.canvas.height / boxSize;
+    const { col, row, boxSize, rectRadius } = this.state;
 
-    this.setState({ row, col });
+    // 1. Clear canvas
+    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
 
+    // 2. Render Background
     for (let i = 0; i < col; i++) {
       for (let j = 0; j < row; j++) {
         ctx.fillStyle = bg;
@@ -134,91 +196,15 @@ class SnakeBoard extends React.Component {
         bg = (bg === this.props.theme.light) ? this.props.theme.dark : this.props.theme.light;
       }
     }
-  }
 
-  renderSnake = () => {
-    let ctx = this.refs.canvas.getContext('2d');
-    ctx.clearRect(0, 0, ctx.canvas.width, ctx.canvas.height);
-
-    this.renderBG();
-    const boxSize = this.state.width > 400 ? 50 : 30;
-    const rectRadius = boxSize === 50 ? 15 : 11;
-
-    for (let i = 0; i < this.state.col; i++) {
-      for (let j = 0; j < this.state.row; j++) {
-        if (this.state.area[i][j] === 1) {
-          ctx.roundRect(j * boxSize, i * boxSize, boxSize, boxSize, rectRadius);
-          ctx.fillStyle = this.props.theme.snake;
-          ctx.fill();
-        } else if (this.state.area[i][j] === 9) {
-          ctx.drawImage(this.state.foodImg, j * boxSize, i * boxSize, boxSize, boxSize);
-        }
-      }
-    }
-  }
-
-  snakeController = () => {
-    setTimeout(() => {
-      const shouldContinue = this.moveSnake();
-      if (shouldContinue) {
-        this.initArea();
-        this.renderSnake();
-
-        this.snakeController();
-      } else {
-        setTimeout(() => {
-          this.props.updatePage(<ResultScreen />);
-        }, 1000);
-      }
-    }, this.state.refreshTime);
-  }
-
-  updateCanvasDimensions = () => {
-    const width = window.innerWidth > 500 ? 850 : 390;
-    const height = window.innerWidth > 500 ? 700 : 390;
-
-    this.setState({ width, height });
-  }
-
-  UNSAFE_componentWillMount = () => {
-    let food = new Image();
-    food.src = image;
-
-    let refreshTime;
-    if (this.props.game.level === 'easy') refreshTime = 200;
-    else if (this.props.game.level === 'medium') refreshTime = 150;
-    else refreshTime = 100;
-
-    this.setState({
-      foodImg: food,
-      keyPressed: 'ArrowRight',
-      snake: [
-        { i: 6, j: 2 },
-        { i: 6, j: 3 },
-        { i: 6, j: 4 },
-      ],
-      refreshTime
-    });
-  }
-
-  componentDidMount = async () => {
-    await this.updateCanvasDimensions();
-    await window.addEventListener('resize', this.updateCanvasDimensions);
-
-    const canvas = this.refs.canvas;
-    canvas.width = this.state.width;
-    canvas.height = this.state.height;
-
-    this.renderBG();
-    this.initArea();
-    this.generateFood();
-    this.renderSnake();
-
-    this.snakeController();
-
-    document.addEventListener('keydown', e => {
-      this.changeDirection(e.key)
+    // 2. Render Snake and Food
+    this.snake.forEach(e => {
+      ctx.roundRect(e.j * boxSize, e.i * boxSize, boxSize, boxSize, rectRadius);
+      ctx.fillStyle = this.props.theme.snake;
+      ctx.fill();
     })
+    if (this.food)
+      ctx.drawImage(this.foodImg, this.food.j * boxSize, this.food.i * boxSize, boxSize, boxSize);
   }
 
   render = () => (
