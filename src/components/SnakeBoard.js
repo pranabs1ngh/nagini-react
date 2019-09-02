@@ -146,9 +146,60 @@ class SnakeBoard extends React.Component {
     }, this.refreshTime);
   }
 
+  getTouches = evt => {
+    return evt.touches || evt.originalEvent.touches;
+  }
+
+  detectSwipe = () => {
+    document.addEventListener('touchstart', handleTouchStart, false);
+    document.addEventListener('touchmove', handleTouchMove, false);
+
+    let xDown = null;
+    let yDown = null;
+    const self = this;
+
+    function getTouches(evt) {
+      return evt.touches || evt.originalEvent.touches;
+    }
+
+    function handleTouchStart(evt) {
+      const firstTouch = getTouches(evt)[0];
+      xDown = firstTouch.clientX;
+      yDown = firstTouch.clientY;
+    };
+
+    function handleTouchMove(evt) {
+      if (!xDown || !yDown) {
+        return;
+      }
+
+      let xUp = evt.touches[0].clientX;
+      let yUp = evt.touches[0].clientY;
+
+      let xDiff = xDown - xUp;
+      let yDiff = yDown - yUp;
+
+      if (Math.abs(xDiff) > Math.abs(yDiff)) {/*most significant*/
+        if (xDiff > 0) {
+          self.changeDirection('ArrowLeft')
+        } else {
+          self.changeDirection('ArrowRight')
+        }
+      } else {
+        if (yDiff > 0) {
+          self.changeDirection('ArrowUp')
+        } else {
+          self.changeDirection('ArrowDown')
+        }
+      }
+      xDown = null;
+      yDown = null;
+    };
+  }
+
   updateCanvasDimensions = () => {
-    const width = window.innerWidth > 500 ? 850 : 390;
-    const height = window.innerWidth > 500 ? 700 : 390;
+    const width = window.innerWidth > 500 ? 850 : 330;
+    const height = window.innerWidth > 500 ? 700 : 330;
     const boxSize = width > 400 ? 50 : 30;
     const rectRadius = boxSize === 50 ? 15 : 11;
     const row = width / boxSize;
@@ -176,6 +227,8 @@ class SnakeBoard extends React.Component {
     document.addEventListener('keydown', e => {
       this.changeDirection(e.key)
     })
+
+    this.detectSwipe();
   }
 
   componentDidUpdate = () => {
