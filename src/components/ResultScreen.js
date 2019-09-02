@@ -24,6 +24,10 @@ class ResultScreen extends React.Component {
     this.props.updatePage(<Homescreen />);
   }
 
+  componentDidMount = () => {
+    localStorage.setItem('highScore', JSON.stringify(this.props.game.highScore));
+  }
+
   render = () => (
     <div className='container' style={{ 'background': this.props.theme.dark }}>
       <div className='game-over'>

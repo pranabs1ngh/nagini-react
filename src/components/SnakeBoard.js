@@ -146,10 +146,6 @@ class SnakeBoard extends React.Component {
     }, this.refreshTime);
   }
 
-  getTouches = evt => {
-    return evt.touches || evt.originalEvent.touches;
-  }
-
   detectSwipe = () => {
     document.addEventListener('touchstart', handleTouchStart, false);
     document.addEventListener('touchmove', handleTouchMove, false);
@@ -218,6 +214,9 @@ class SnakeBoard extends React.Component {
     if (this.props.game.level === 'easy') this.refreshTime = 200;
     else if (this.props.game.level === 'medium') this.refreshTime = 150;
     else this.refreshTime = 100;
+
+    const highScore = JSON.parse(localStorage.getItem('highScore'));
+    if (highScore) this.props.updateHighScore(highScore);
 
     this.initArea();
     this.generateFood();
