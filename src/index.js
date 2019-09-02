@@ -6,6 +6,8 @@ import { createStore, compose } from 'redux'
 import App from './components/App'
 import reducers from './reducers'
 
+import * as serviceWorker from './serviceWorker'
+
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const store = createStore(reducers, composeEnhancers());
 
@@ -14,3 +16,5 @@ ReactDOM.render(
     <App />
   </Provider>, document.querySelector('#root')
 );
+
+serviceWorker.register();
